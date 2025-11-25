@@ -57,15 +57,15 @@ Please choose one of the two LD reference panels according to the training GWAS 
 - 498 EUR, 659 AFR, 347 AMR, 503 EAS, 487 SAS.
 - __Recommended when GWAS training sample sizes are relatively small, e.g., N<sub>GWAS</sub> < 50K for all ancestry groups__.
 
-[EUR reference data](https://drive.google.com/file/d/1448w1cMdFuBmhnKEpamUBkGWX93WcaI-/view?usp=drive_link) (~26.33G): Google Drive File ID: `1448w1cMdFuBmhnKEpamUBkGWX93WcaI-`; decompress by `tar -zxvf EUR.tar.gz`
+[EUR reference data](https://drive.google.com/file/d/19wgTK7s7WTTgbAvFSmGXO_4lHSGgQMTf/view?usp=drive_link) (~24.55G): Google Drive File ID: `19wgTK7s7WTTgbAvFSmGXO_4lHSGgQMTf`; decompress by `tar -zxvf EUR.tar.gz`
 
-[AFR reference data](https://drive.google.com/file/d/12j9y0brD004HNakC7LoEot8RHFhToVAq/view?usp=drive_link) (~36.81G): Google Drive File ID: `12j9y0brD004HNakC7LoEot8RHFhToVAq`; decompress by `tar -zxvf AFR.tar.gz`
+[AFR reference data](https://drive.google.com/file/d/1KGmX3YqEsS_EqC5-nZLCzTZVf45mPHp2/view?usp=drive_link) (~34.53G): Google Drive File ID: `1KGmX3YqEsS_EqC5-nZLCzTZVf45mPHp2`; decompress by `tar -zxvf AFR.tar.gz`
 
-[AMR reference data](https://drive.google.com/file/d/1ItDxm8mllEAoaUyddd_wz8UTp0clNmLW/view?usp=drive_link) (~32.82G): Google Drive File ID: `1ItDxm8mllEAoaUyddd_wz8UTp0clNmLW`; decompress by `tar -zxvf AMR.tar.gz`
+[AMR reference data](https://drive.google.com/file/d/17JTfA5rmKZI1-mMdYw2RW6-CFBEr9YuU/view?usp=drive_link) (~30.6G): Google Drive File ID: `17JTfA5rmKZI1-mMdYw2RW6-CFBEr9YuU`; decompress by `tar -zxvf AMR.tar.gz`
 
-[EAS reference data](https://drive.google.com/file/d/1z4bztGLssmXmOiA4AHq4jzRQ5u9A-w7-/view?usp=drive_link) (~19.90G): Google Drive File ID: `1z4bztGLssmXmOiA4AHq4jzRQ5u9A-w7-`; decompress by `tar -zxvf EAS.tar.gz`
+[EAS reference data](https://drive.google.com/file/d/1GUC8tbMZh2-nu1aVblFuca711CVp92Mq/view?usp=drive_link) (~18.59G): Google Drive File ID: `1GUC8tbMZh2-nu1aVblFuca711CVp92Mq`; decompress by `tar -zxvf EAS.tar.gz`
 
-[SAS reference data](https://drive.google.com/file/d/1PCiy_rMDGxPpBZpQzRSVNocc9ZwoHt0-/view?usp=drive_link) (~21.61G): Google Drive File ID: `1PCiy_rMDGxPpBZpQzRSVNocc9ZwoHt0-`; decompress by `tar -zxvf SAS.tar.gz`
+[SAS reference data](https://drive.google.com/file/d/1Lw9TUi2zDlt0zT1MEyYMt_KtUKb1z1mF/view?usp=drive_link) (~20.20G): Google Drive File ID: `1Lw9TUi2zDlt0zT1MEyYMt_KtUKb1z1mF`; decompress by `tar -zxvf SAS.tar.gz`
 
 
 - Install [PLINK1.9](https://www.cog-genomics.org/plink/) and [PLINK2](https://www.cog-genomics.org/plink/2.0/).
@@ -79,7 +79,7 @@ install.packages(c('RISCA','optparse','bigreadr','bigsnpr','bigparallelr', 'bigm
 
 - Prepare input data files:
 
-Please use the `example_data` in [Example](#example) as a reference to prepare  the input data files. Please note that the SNPs are matched across the training GWAS data, LD reference data, and validation data by RSID.
+Please use the `example_data` in [Example](#example) as a reference to prepare  the input data files.
 
 An example of the GWAS summary data format:
 ```
@@ -90,19 +90,19 @@ An example of the GWAS summary data format:
 ```
 The following columns are required for the GWAS summary data files:
 
- 1. rsid: SNP ID, in the format of rsXXXX. If only the position information is available (in the training GWAS data and/or validation data), please impute rsid (e.g., using LD reference data with the same genome build).
- 2. chr: shromosome, 1, 2, ..., or 22.
+ 1. rsid: SNP ID, in the format of rsXXXX. If only the position information is available, please impute RSID using reference genotype data of the same genome build.
+ 2. chr: chromosome, 1, 2, ..., or 22.
  3. beta: SNP effect. For binary traits, beta is the log of odds ratio (logOR) from logistic regressions.
  4. beta_se: standard error of beta.
  5. a1: effective (reference) allele (counted allele in regression), the allele which beta corresponds to.
  6. a0: other (alternative) allele. Note that sometimes it is referred to as "a2".
- 7. n_eff: GWAS sample size by SNP. For binary traits, it is the effective sample sizes = 4 / (1 / N_control + 1 / N_case); and for continuous traits, it is the same as the total sample size.
+ 7. n_eff: GWAS sample size by SNP. For binary traits, it is the effective sample size: 4 / (1 / N_control + 1 / N_case); and for continuous traits, it is the same as the total sample size.
 
-Before running the MUSSEL pipeline, please consider applying the following quality control steps on the GWAS summary data files, if possible:
+Before running the MUSSEL pipeline, please consider applying the following quality control steps on the GWAS summary data:
 
  1. Only keep the biallelic HapMap3 + MEGA SNPs (SNP IDs can be found in the second column of `ref_bim.txt`) to avoid troubles caused by reading huge files (e.g., > 8 million SNPs) in R.
  2. Remove SNPs with minor allele frequencies lower than 1% in all populations.
- 3. Remove SNPs with small GWAS sample sizes (90% of median per SNP GWAS sample size).
+ 3. Remove SNPs with very small GWAS sample sizes (e.g., < 90% of the total GWAS sample size). This step can be omitted if too many SNPs are removed.
 
 
 __Note:__ 

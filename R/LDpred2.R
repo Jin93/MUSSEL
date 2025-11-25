@@ -23,14 +23,14 @@ option_list = list(
   make_option("--pop", action="store", default=NA, type='character',
               help="Populations of the GWAS samples, separated by comma [required]"),
   
-  make_option("--p", action="store", default=paste(signif(seq_log(1e-5, 1, length.out = 21), 2), collapse = ','), type='character',
+  make_option("--p", action="store", default=paste(signif(seq_log(1e-5, 1, length.out = 11), 2), collapse = ','), type='character',
               help="Candidate values for tuning parameter p (causal SNP proportion) [default: %default]"),
-  make_option("--H2", action="store", default=paste(c(0.3, 0.7, 1, 1.4), collapse = ','), type='character',
+  make_option("--H2", action="store", default=paste(c(0.7, 1, 1.4), collapse = ','), type='character',
               help="Candidate values for tuning parameter H2 (heritability = H2 * h2_est from LDSC) [default: %default]"),
   make_option("--sparse", action="store", default='0', type='character',
               help="Whether to consider a sparse model: 0, 1, or 0,1 [default: %default]"),
   make_option("--bfile_tuning", action="store", default=NA, type='character',
-              help="Path to PLINK binary input file prefix (minus .bed/.bim/.fam) for tuning, save by chromosome [required]"),
+              help="Path to PLINK binary input file prefix (minus .bim) for tuning, save by chromosome [required]"),
 
   make_option("--verbose", action="store", default=1, type="integer",
               help="How much chatter to print: 0=nothing; 1=minimal; 2=all [default: %default]"),
@@ -47,9 +47,9 @@ suppressWarnings(dir.create(opt$PATH_out))
 
 races = str_split(opt$pop,",")[[1]]; K <- length(races)
 sumdata_paths = str_split(opt$FILE_sst,",")[[1]]
-ref_paths <- paste0(opt$PATH_ref,"/",races, "/raw")
-precalLD_paths <- paste0(opt$PATH_ref,'/',races, '/precalLD')
-map_paths <- paste0(opt$PATH_ref,'/',races, '/map')
+ref_paths <- paste0(opt$PATH_ref,"/1KGref_plinkfile/",races)
+precalLD_paths <- paste0(opt$PATH_ref,'/LDpred2_lassosum2_corr_1kg/',races)
+map_paths <- paste0(opt$PATH_ref,'/MUSSEL/',races, '/map')
 out_paths <- paste0(opt$PATH_out,"/",races)
 
 bfile_tuning_vec <- str_split(opt$bfile_tuning,",")[[1]]
@@ -57,7 +57,7 @@ bfile_tuning_vec <- str_split(opt$bfile_tuning,",")[[1]]
 # Perform i/o check:
 files <- NULL
 files <- c(files, sumdata_paths)
-for(mmm in 1:K){ files <- c(files, paste(bfile_tuning_vec[mmm],c(".bed",".bim",".fam"),sep='')) }
+for(mmm in 1:K){ files <- c(files, paste(bfile_tuning_vec[mmm],c(".bim"),sep='')) }
 
 for ( f in files ) {
   if ( !file.exists(f) ){
