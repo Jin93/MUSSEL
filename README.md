@@ -8,7 +8,7 @@ To use the tool, please follow the instructions in [Getting Started](#gettingsta
 
 
 ## Version History
-- [ ] __February 24, 2026:__  Adding more details to the code for instructing on how to construct your own LD reference data [Generate_LD_info_by_LDblock.R](R/Generate_LD_info_by_LDblock.R).
+- [ ] __February 24, 2026:__  Adding more details to [Generate_LD_info_by_LDblock.R](R/Generate_LD_info_by_LDblock.R) for guidance on how to construct your own LD reference data.
 
 - [ ] __April 10, 2024:__  Updated MUSSEL to incorporate the most recent version of [LDpred2](https://privefl.github.io/bigsnpr/articles/LDpred2.html) (June 8, 2023 version): now LDpred2_jobs.R will only submit one job to the server instead of 22 (by chromosome) in the previous version; fixed bugs with covariate adjustment; now allow for calculating AUC of PRS for binary traits.
 
