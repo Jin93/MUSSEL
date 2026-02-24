@@ -1,7 +1,7 @@
 library("optparse")
 library(caret)
 # First, download the R package lassosum, directory to the package:
-dir.lassosum = '/users/jjin/R/4.1.x/lassosum/' # this can be obtained by downloading the lassosum package in R.
+dir.MUSSEL = '/MUSSEL/' # path to the MUSSEL/ directory
 eth = c('EUR','AFR','AMR','EAS','SAS') # race
 et = c('EUR', 'AFR', 'EUR', 'ASN', 'EUR') # corresponding file names in the lassosum package.
 gbuild = 'hg19'
@@ -22,7 +22,8 @@ for (k in 1:length(eth)){ # Generate LD info for each ancestry k
   temdir = paste0(blockdir, '/tmp/byblock/')
   if (!dir.exists(temdir)){dir.create(temdir)}
   
-  ldblocks = bigreadr::fread2(paste0(dir.lassosum, 'data/Berisa.',et[k],'.',gbuild,'.bed')) # load LD block position information
+  ldblocks = bigreadr::fread2(paste0(dir.MUSSEL,'/data/Berisa.',et[k],'.',gbuild,'.bed')) # load LD block position information
+  # This LD block info was directly obtained from the R package "lassosum".
   refdir = paste0('/data/jjin/prs/1KGref_MEGA/GRCh37/',race) # path to the folder where you save the reference genotype data in PLINK format
   for (chr in 1:22){
     temdir = paste0(blockdir,'/tmp/byblock/chr',chr,'/')
@@ -74,7 +75,7 @@ for (k in 1:length(eth)){
   if (!dir.exists(blockdir)){dir.create(blockdir)}
   temdir = paste0(blockdir, '/tmp/LD/')
   if (!dir.exists(temdir)){dir.create(temdir)}
-  ldblocks = bigreadr::fread2(paste0(dir.lassosum, 'data/Berisa.',et[k],'.',gbuild,'.bed')) # load LD block position information
+  ldblocks = bigreadr::fread2(paste0(dir.MUSSEL, 'data/Berisa.',et[k],'.',gbuild,'.bed')) # load LD block position information
   for (chr in 1:22){
     temdir = paste0(blockdir,'/tmp/LD/chr',chr,'/')
     if (!dir.exists(temdir)){dir.create(temdir)}
@@ -127,7 +128,7 @@ for (k in 1:length(eth)){
   race = eth[k];
   workdir = paste0(LDdir,race,'/standard_data')
   if (!dir.exists(workdir)) dir.create(paste0(workdir))
-  block_info <- read.table(paste0(dir.lassosum, 'data/Berisa.',et[k],'.',gbuild,'.bed'),header = T)
+  block_info <- read.table(paste0(dir.MUSSEL, 'data/Berisa.',et[k],'.',gbuild,'.bed'),header = T)
   blockdir = paste0(LDdir, race)
   for (chr in 1:22){
     block_info_tmp <- block_info[block_info$chr== paste0('chr',chr),]
