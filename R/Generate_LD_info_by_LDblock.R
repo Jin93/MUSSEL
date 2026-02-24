@@ -1,15 +1,15 @@
 library("optparse")
 library(caret)
 # First, download the R package lassosum, directory to the package:
-dir.lassosum = '/users/jjin/R/4.1.x/lassosum/'
+dir.lassosum = '/users/jjin/R/4.1.x/lassosum/' # this can be obtained by downloading the lassosum package in R.
 eth = c('EUR','AFR','AMR','EAS','SAS') # race
 et = c('EUR', 'AFR', 'EUR', 'ASN', 'EUR') # corresponding file names in the lassosum package.
 gbuild = 'hg19'
-dir.plink2 = '/dcl01/chatterj/data/jin/software/plink2' # path to the PLINK 2.0 software
-dir.plink = '/dcl01/chatterj/data/jin/software/plink' # path to the PLINK 1.9 software
+dir.plink2 = '/data/jin/software/plink2' # path to the PLINK 2.0 software
+dir.plink = '/data/jin/software/plink' # path to the PLINK 1.9 software
 
 # directory where you want to save the generated LD matrix info by LD block
-LDdir = '/dcs04/nilanjan/data/jjin/prs/testLDblocks/' 
+LDdir = '/data/jjin/prs/testLDblocks/' 
 
 # Split genotype data files by LD block
 # /tmp/byblock/:
@@ -23,14 +23,14 @@ for (k in 1:length(eth)){ # Generate LD info for each ancestry k
   if (!dir.exists(temdir)){dir.create(temdir)}
   
   ldblocks = bigreadr::fread2(paste0(dir.lassosum, 'data/Berisa.',et[k],'.',gbuild,'.bed')) # load LD block position information
-  refdir = paste0('/dcs04/nilanjan/data/jjin/prs/1KGref_MEGA/GRCh37/',race) # directory to the reference genotype data 
+  refdir = paste0('/data/jjin/prs/1KGref_MEGA/GRCh37/',race) # path to the folder where you save the reference genotype data in PLINK format
   for (chr in 1:22){
     temdir = paste0(blockdir,'/tmp/byblock/chr',chr,'/')
     if (!dir.exists(temdir)){dir.create(temdir)}
     ldblock = ldblocks[ldblocks$chr == paste0('chr',chr),]
     for (bl in 1:nrow(ldblock)){
       plinkcode = paste(
-        "/dcl01/chatterj/data/jin/software/plink2",
+        "/data/jin/software/plink2",
         paste0('--bfile ', refdir, '/chr',chr),
         paste0('--from-bp ', ldblock[bl, 'start']),
         paste0('--to-bp ', ldblock[bl, 'stop']-1),
@@ -42,7 +42,7 @@ for (k in 1:length(eth)){ # Generate LD info for each ancestry k
       system(plinkcode)
     }
     plinkcode = paste(
-      "/dcl01/chatterj/data/jin/software/plink2",
+      "/data/jin/software/plink2",
       paste0('--bfile ', refdir, '/chr',chr),
       paste0('--to-bp ', ldblock[1, 'start']),
       paste0('--chr ',chr),
@@ -52,7 +52,7 @@ for (k in 1:length(eth)){ # Generate LD info for each ancestry k
     )
     system(plinkcode)
     plinkcode = paste(
-      "/dcl01/chatterj/data/jin/software/plink2",
+      "/data/jin/software/plink2",
       paste0('--bfile ', refdir, '/chr',chr),
       paste0('--from-bp ', ldblock[nrow(ldblock), 'stop']),
       paste0('--chr ',chr),
@@ -216,4 +216,3 @@ for (k in 1:length(eth)){
     cat(paste0(chr, " completed.\n"))
   }
 }
-
